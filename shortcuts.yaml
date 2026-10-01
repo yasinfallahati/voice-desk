@@ -1,0 +1,82 @@
+# میانبرهای از پیش تعریف‌شده
+# کلید = متن یا دستور بات | value = دستور shell
+# دکمه‌های کیبورد در bot/menu.py هستند
+
+shortcuts:
+  آپدیت:
+    cmd: "sudo apt update && apt list --upgradable 2>/dev/null | head -40"
+    desc: "لیست آپدیت‌های apt"
+
+  وضعیت:
+    cmd: "uptime; echo '---'; free -h; echo '---'; df -h / /home 2>/dev/null; echo '---'; sensors 2>/dev/null || echo 'sensors N/A'"
+    desc: "آپ‌تایم، رم، دیسک، دما"
+
+  پروسس:
+    cmd: "ps aux --sort=-%mem | head -20"
+    desc: "پروسس‌های پرمصرف رم"
+
+  سی‌پی‌یو:
+    cmd: "ps aux --sort=-%cpu | head -20"
+    desc: "پروسس‌های پرمصرف CPU"
+
+  شبکه:
+    cmd: "ip -br a; echo '---'; ss -tulpn 2>/dev/null | head -30 || netstat -tulpn 2>/dev/null | head -30"
+    desc: "IP و پورت‌های باز"
+
+  وای‌فای:
+    cmd: "nmcli -t -f ACTIVE,SSID,SIGNAL,SECURITY device wifi list 2>/dev/null | head -20 || iwconfig 2>/dev/null"
+    desc: "وضعیت وای‌فای"
+
+  باتری:
+    cmd: "upower -i $(upower -e | grep BAT) 2>/dev/null | grep -E 'state|percentage|time' || cat /sys/class/power_supply/BAT*/capacity 2>/dev/null"
+    desc: "وضعیت باتری"
+
+  روشن‌کردن-مانیتور:
+    cmd: "xset dpms force on 2>/dev/null; busctl --user set-property org.gnome.Mutter.DisplayConfig /org/gnome/Mutter/DisplayConfig org.gnome.Mutter.DisplayConfig PowerSaveMode i 0 2>/dev/null; echo ok"
+    desc: "بیدار کردن صفحه"
+
+  خاموش‌کردن-مانیتور:
+    cmd: "xset dpms force off 2>/dev/null; busctl --user set-property org.gnome.Mutter.DisplayConfig /org/gnome/Mutter/DisplayConfig org.gnome.Mutter.DisplayConfig PowerSaveMode i 1 2>/dev/null; echo ok"
+    desc: "خاموش کردن صفحه"
+
+  قفل:
+    cmd: "loginctl lock-session || gnome-screensaver-command -l || qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock"
+    desc: "قفل صفحه"
+
+  کروم:
+    cmd: "nohup google-chrome-stable >/dev/null 2>&1 & echo 'Chrome opened'"
+    desc: "باز کردن Chrome"
+
+  کرسر:
+    cmd: "nohup cursor >/dev/null 2>&1 & echo 'Cursor opened'"
+    desc: "باز کردن Cursor"
+
+  فیلترشکن:
+    cmd: "if ss -ltn 2>/dev/null | grep -q ':10808'; then echo 'فیلترشکن روشنه'; else nohup v2rayn >/dev/null 2>&1 & echo 'v2rayN started'; fi"
+    desc: "روشن کردن v2rayN"
+
+  بازکردن-فایرفاکس:
+    cmd: "nohup firefox >/dev/null 2>&1 & echo 'firefox started'"
+    desc: "باز کردن فایرفاکس"
+
+  بازکردن-ترمینال:
+    cmd: "nohup gnome-terminal >/dev/null 2>&1 || nohup xdg-terminal >/dev/null 2>&1 || nohup kitty >/dev/null 2>&1 & echo 'terminal started'"
+    desc: "باز کردن ترمینال"
+
+  حجم-خانه:
+    cmd: "du -h --max-depth=1 ~ 2>/dev/null | sort -hr | head -25"
+    desc: "مصرف دیسک در home"
+
+  لاگ-سیستم:
+    cmd: "journalctl -n 40 --no-pager -p err..alert"
+    desc: "آخرین خطای journal"
+
+  ریبوت:
+    cmd: "systemctl reboot"
+    desc: "ریستارت سیستم"
+    dangerous: true
+
+  شات‌داون:
+    cmd: "systemctl poweroff"
+    desc: "خاموش کردن سیستم"
+    dangerous: true
